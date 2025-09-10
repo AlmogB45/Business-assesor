@@ -1,0 +1,245 @@
+[
+  {
+    "id": "license_basic",
+    "name": "רישיון עסק בסיסי",
+    "description": "רישיון עסק כללי הנדרש לכל בית עסק",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 1 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-4 שבועות",
+    "cost": "₪500-1500"
+  },
+  {
+    "id": "food_service_license",
+    "name": "רישיון מזון",
+    "description": "רישיון להגשת מזון לציבור",
+    "type": "mandatory",
+    "applies_if": {
+      "serves_food": true
+    },
+    "authority": "משרד הבריאות",
+    "estimated_time": "3-6 שבועות",
+    "cost": "₪800-2000"
+  },
+  {
+    "id": "gas_installation",
+    "name": "אישור התקנת גז",
+    "description": "אישור בטיחות להתקנת גז",
+    "type": "mandatory",
+    "applies_if": {
+      "gas": true
+    },
+    "authority": "חברת הגז הטבעי",
+    "estimated_time": "1-2 שבועות",
+    "cost": "₪300-800"
+  },
+  {
+    "id": "large_kitchen_approval",
+    "name": "אישור מטבח גדול",
+    "description": "אישור מיוחד למטבחים מעל 100 מ\"ר",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 100 },
+      "serves_food": true
+    },
+    "authority": "משרד הבריאות",
+    "estimated_time": "4-8 שבועות",
+    "cost": "₪1500-3000"
+  },
+  {
+    "id": "many_seats_permit",
+    "name": "היתר ישיבה מעל 50 מקומות",
+    "description": "היתר מיוחד למסעדות עם מעל 50 מקומות ישיבה",
+    "type": "mandatory",
+    "applies_if": {
+      "seats": { "min": 50 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-4 שבועות",
+    "cost": "₪1000-2500"
+  },
+  {
+    "id": "fire_safety",
+    "name": "אישור כיבוי אש",
+    "description": "אישור בטיחות אש",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 50 }
+    },
+    "authority": "רשות כיבוי והצלה",
+    "estimated_time": "2-3 שבועות",
+    "cost": "₪500-1200"
+  },
+  {
+    "id": "meat_handling",
+    "name": "רישיון טיפול בבשר",
+    "description": "רישיון מיוחד לטיפול ואחסון בשר",
+    "type": "mandatory",
+    "applies_if": {
+      "serves_meat": true
+    },
+    "authority": "שירותי וטרינריה",
+    "estimated_time": "3-5 שבועות",
+    "cost": "₪800-1800"
+  },
+  {
+    "id": "delivery_permit",
+    "name": "היתר משלוחים",
+    "description": "היתר לשירותי משלוחים",
+    "type": "mandatory",
+    "applies_if": {
+      "deliveries": true
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "1-3 שבועות",
+    "cost": "₪300-700"
+  },
+  {
+    "id": "noise_permit",
+    "name": "היתר רעש",
+    "description": "היתר לפעילות רועשת",
+    "type": "recommended",
+    "applies_if": {
+      "area_m2": { "min": 80 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-3 שבועות",
+    "cost": "₪400-900"
+  },
+  {
+    "id": "outdoor_seating",
+    "name": "היתר ישיבה חיצונית",
+    "description": "היתר להצבת שולחנות ברחוב",
+    "type": "optional",
+    "applies_if": {
+      "seats": { "min": 20 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "3-6 שבועות",
+    "cost": "₪600-1500"
+  },
+  {
+    "id": "kashrut_supervision",
+    "name": "השגחת כשרות",
+    "description": "תעודת כשרות",
+    "type": "optional",
+    "applies_if": {
+      "serves_food": true
+    },
+    "authority": "רבנות מקומית",
+    "estimated_time": "1-2 שבועות",
+    "cost": "₪200-500 לחודש"
+  },
+  {
+    "id": "alcohol_license",
+    "name": "רישיון אלכוהול",
+    "description": "רישיון למכירת משקאות אלכוהוליים",
+    "type": "optional",
+    "applies_if": {
+      "seats": { "min": 15 }
+    },
+    "authority": "משרד הפנים",
+    "estimated_time": "4-8 שבועות",
+    "cost": "₪1000-2500"
+  },
+  {
+    "id": "music_entertainment",
+    "name": "רישיון בידור ומוזיקה",
+    "description": "רישיון לעריכת אירועים וניגון מוזיקה",
+    "type": "optional",
+    "applies_if": {
+      "area_m2": { "min": 60 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-4 שבועות",
+    "cost": "₪500-1200"
+  },
+  {
+    "id": "accessibility",
+    "name": "אישור נגישות",
+    "description": "אישור התאמה לאנשים עם מוגבלויות",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 30 }
+    },
+    "authority": "משרד העבודה והרווחה",
+    "estimated_time": "2-5 שבועות",
+    "cost": "₪400-1000"
+  },
+  {
+    "id": "ventilation_system",
+    "name": "אישור מערכת אוורור",
+    "description": "אישור למערכת אוורור במטבח",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 40 },
+      "serves_food": true
+    },
+    "authority": "מהנדס עיר",
+    "estimated_time": "2-4 שבועות",
+    "cost": "₪600-1500"
+  },
+  {
+    "id": "waste_management",
+    "name": "תוכנית ניהול פסולת",
+    "description": "תוכנית לטיפול בפסולת מזון",
+    "type": "recommended",
+    "applies_if": {
+      "serves_food": true,
+      "area_m2": { "min": 25 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "1-2 שבועות",
+    "cost": "₪200-600"
+  },
+  {
+    "id": "parking_permit",
+    "name": "היתר חניה",
+    "description": "היתר לחניית עובדים ולקוחות",
+    "type": "recommended",
+    "applies_if": {
+      "seats": { "min": 30 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-3 שבועות",
+    "cost": "₪300-800"
+  },
+  {
+    "id": "signage_permit",
+    "name": "היתר שילוט",
+    "description": "היתר להצבת שלטים חיצוניים",
+    "type": "optional",
+    "applies_if": {
+      "area_m2": { "min": 20 }
+    },
+    "authority": "עיריית תל אביב",
+    "estimated_time": "2-4 שבועות",
+    "cost": "₪400-1000"
+  },
+  {
+    "id": "employee_facilities",
+    "name": "מתקני עובדים",
+    "description": "דרישות למתקני עובדים (מלתחות, מקלחות)",
+    "type": "mandatory",
+    "applies_if": {
+      "area_m2": { "min": 60 }
+    },
+    "authority": "משרד העבודה והרווחה",
+    "estimated_time": "2-3 שבועות",
+    "cost": "₪500-1200"
+  },
+  {
+    "id": "water_quality",
+    "name": "בדיקת איכות מים",
+    "description": "בדיקה תקופתית של איכות המים",
+    "type": "recommended",
+    "applies_if": {
+      "serves_food": true
+    },
+    "authority": "משרד הבריאות",
+    "estimated_time": "1 שבוע",
+    "cost": "₪200-500"
+  }
+]
