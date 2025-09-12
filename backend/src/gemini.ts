@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { BusinessInput, Requirement } from './types';
 import { generateMockReport, MOCK_MODE_ENABLED } from './mock-openai';
 
@@ -6,26 +6,31 @@ const SYSTEM_PROMPT = `אתה מסייע רישוי עסקים בישראל. ק�
 
 הדוח צריך להיות מקצועי, ברור ופרקטי. השתמש בכותרות ברורות, רשימות מסודרות, וטבלאות כשמתאים. התמקד במידע מעשי שיעזור לבעל העסק להבין מה עליו לעשות.`;
 
-function getOpenAIClient(): OpenAI {
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+function getGeminiClient() {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not set');
+  }
+  
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  return genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' });
 }
 
-export async function generateReport(
+export async function generateReportWithGemini(
   businessInput: BusinessInput,
   matchedRequirements: Requirement[]
 ): Promise<string> {
-  // Use mock response if OpenAI is not available or in mock mode
-  if (MOCK_MODE_ENABLED || !process.env.OPENAI_API_KEY) {
-    console.log('Using mock OpenAI response (no billing/credits available)');
+  // Use mock response if Gemini is not available or in mock mode
+  if (MOCK_MODE_ENABLED || !process.env.GEMINI_API_KEY) {
+    console.log('Using mock response (Gemini API key not available)');
     return generateMockReport(businessInput, matchedRequirements);
   }
 
-  const model = process.env.MODEL || 'gpt-4o-mini';
-  const openai = getOpenAIClient();
-  
-  const userPrompt = `
+  try {
+    const model = getGeminiClient();
+    
+    const userPrompt = `
+${SYSTEM_PROMPT}
+
 נתוני העסק:
 - שטח: ${businessInput.area_m2} מ"ר
 - מקומות ישיבה: ${businessInput.seats}
@@ -50,41 +55,40 @@ ${matchedRequirements.map(req => `
 6. פערי מידע ותחומים לבדיקה נוספת
 `;
 
-  try {
-    const completion = await openai.chat.completions.create({
-      model,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
-
-    return completion.choices[0]?.message?.content || 'שגיאה ביצירת הדוח';
+    console.log('Generating report with Google Gemini...');
+    const result = await model.generateContent(userPrompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    if (!text || text.trim().length === 0) {
+      console.log('Empty response from Gemini, falling back to mock');
+      return generateMockReport(businessInput, matchedRequirements);
+    }
+    
+    return text;
   } catch (error: any) {
-    console.error('OpenAI API Error:', error);
+    console.error('Gemini API Error:', error);
     console.error('Error details:', {
       message: error.message,
       status: error.status,
       code: error.code,
-      type: error.type,
       response: error.response?.data
     });
     
-    // More specific error messages based on OpenAI error types
-    // Check for insufficient quota first (comes with status 429 but should fallback to mock)
-    if (error.code === 'insufficient_quota') {
-      console.log('OpenAI quota exceeded, falling back to mock response');
+    // Handle different types of Gemini API errors
+    if (error.message?.includes('API_KEY_INVALID')) {
+      console.log('Invalid Gemini API key, falling back to mock response');
       return generateMockReport(businessInput, matchedRequirements);
-    } else if (error.status === 401) {
-      throw new Error('❌ Invalid OpenAI API key. Please check your configuration in backend/.env');
-    } else if (error.status === 429) {
-      throw new Error('⏱️ OpenAI rate limit exceeded. Please wait 1-2 minutes and try again. Consider upgrading your OpenAI plan for higher limits.');
-    } else if (error.status === 503) {
-      throw new Error('🔧 OpenAI service temporarily unavailable. Please try again later.');
+    } else if (error.message?.includes('QUOTA_EXCEEDED')) {
+      console.log('Gemini quota exceeded, falling back to mock response');
+      return generateMockReport(businessInput, matchedRequirements);
+    } else if (error.message?.includes('RATE_LIMIT_EXCEEDED')) {
+      console.log('Gemini rate limit exceeded, falling back to mock response');
+      return generateMockReport(businessInput, matchedRequirements);
     } else {
-      throw new Error(`🚫 OpenAI API Error: ${error.message || 'Unknown error'}`);
+      // For any other error, fall back to mock
+      console.log('Gemini API error, falling back to mock response');
+      return generateMockReport(businessInput, matchedRequirements);
     }
   }
 }
