@@ -148,4 +148,44 @@ h1 {
   color: #007bff;
 }
 
+.source-references {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #eee;
+}
+
+.source-references h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.requirements-list {
+  display: grid;
+  gap: 20px;
+}
+
+.requirement-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.requirement-item h4 {
+  margin: 0 0 10px 0;
+  color: #007bff;
+}
+
+.requirement-item p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.requirement-item code {
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
 

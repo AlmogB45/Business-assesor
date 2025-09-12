@@ -61,6 +61,22 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
       
       <div id="report-content" className="report-content">
         <ReactMarkdown>{reportData.report}</ReactMarkdown>
+        
+        {reportData.matched_requirements && reportData.matched_requirements.length > 0 && (
+          <div className="source-references">
+            <h3>מקורות ודרישות רלוונטיות</h3>
+            <div className="requirements-list">
+              {reportData.matched_requirements.map((req, index) => (
+                <div key={req.id} className="requirement-item">
+                  <h4>{req.title} ({req.level === 'mandatory' ? 'חובה' : req.level === 'recommended' ? 'מומלץ' : 'אופציונלי'})</h4>
+                  <p><strong>תיאור:</strong> {req.summary}</p>
+                  <p><strong>רשות:</strong> {req.authority}</p>
+                  <p><strong>מקור:</strong> <code>{req.source_ref}</code></p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="report-actions">

@@ -9,9 +9,8 @@ export interface BusinessInput {
 
 export interface Requirement {
   id: string;
-  name: string;
-  description: string;
-  type: 'mandatory' | 'recommended' | 'optional';
+  title: string;
+  level: 'mandatory' | 'recommended' | 'optional';
   applies_if: {
     area_m2?: { min?: number; max?: number };
     seats?: { min?: number; max?: number };
@@ -20,9 +19,9 @@ export interface Requirement {
     serves_food?: boolean;
     deliveries?: boolean;
   };
+  summary: string;
   authority: string;
-  estimated_time: string;
-  cost: string;
+  source_ref: string;
 }
 
 export interface MatchResponse {

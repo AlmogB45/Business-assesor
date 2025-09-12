@@ -1,19 +1,22 @@
 import OpenAI from 'openai';
 import { BusinessInput, Requirement } from './types';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 const SYSTEM_PROMPT = `אתה מסייע רישוי עסקים בישראל. קבל נתוני עסק ודרישות רגולטוריות מסוננות, הפק דוח בעברית ב-Markdown הכולל: תקציר מנהלים, דרישות חובה, דרישות מומלצות, צעדים מיידיים (צ'קליסט), הערות, פערי מידע.
 
 הדוח צריך להיות מקצועי, ברור ופרקטי. השתמש בכותרות ברורות, רשימות מסודרות, וטבלאות כשמתאים. התמקד במידע מעשי שיעזור לבעל העסק להבין מה עליו לעשות.`;
+
+function getOpenAIClient(): OpenAI {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 export async function generateReport(
   businessInput: BusinessInput,
   matchedRequirements: Requirement[]
 ): Promise<string> {
   const model = process.env.MODEL || 'gpt-4o-mini';
+  const openai = getOpenAIClient();
   
   const userPrompt = `
 נתוני העסק:
@@ -25,11 +28,10 @@ export async function generateReport(
 
 דרישות רגולטוריות רלוונטיות:
 ${matchedRequirements.map(req => `
-**${req.name}** (${req.type})
-- תיאור: ${req.description}
+**${req.title}** (${req.level})
+- תיאור: ${req.summary}
 - רשות: ${req.authority}
-- זמן משוער: ${req.estimated_time}
-- עלות: ${req.cost}
+- מקור: ${req.source_ref}
 `).join('\n')}
 
 אנא הכן דוח מקיף בעברית עם המבנה הבא:
