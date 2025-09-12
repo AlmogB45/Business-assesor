@@ -2,7 +2,7 @@
 
 ## System Prompt (Hebrew)
 
-The system prompt used for OpenAI API calls:
+The system prompt used for Google Gemini API calls:
 
 ```
 אתה מסייע רישוי עסקים בישראל. קבל נתוני עסק ודרישות רגולטוריות מסוננות, הפק דוח בעברית ב-Markdown הכולל: תקציר מנהלים, דרישות חובה, דרישות מומלצות, צעדים מיידיים (צ'קליסט), הערות, פערי מידע.
@@ -29,11 +29,10 @@ The user prompt dynamically includes business data and matched requirements:
 
 דרישות רגולטוריות רלוונטיות:
 ${matchedRequirements.map(req => `
-**${req.name}** (${req.type})
-- תיאור: ${req.description}
+**${req.title}** (${req.level})
+- תיאור: ${req.summary}
 - רשות: ${req.authority}
-- זמן משוער: ${req.estimated_time}
-- עלות: ${req.cost}
+- מקור: ${req.source_ref}
 `).join('\n')}
 
 אנא הכן דוח מקיף בעברית עם המבנה הבא:
@@ -82,30 +81,24 @@ The AI is instructed to generate a report with the following sections:
 
 ```typescript
 {
-  model: process.env.MODEL || 'gpt-4o-mini',
-  temperature: 0.7,
-  max_tokens: 2000
+  model: process.env.GEMINI_MODEL || 'gemini-1.5-flash'
 }
 ```
 
-- **Temperature 0.7**: Balanced creativity and consistency
-- **Max tokens 2000**: Sufficient for comprehensive reports
-- **Default model**: gpt-4o-mini for cost efficiency
+- **Default model**: gemini-1.5-flash for optimal balance of quality and speed
+- **Free tier**: 15 requests/minute, 1M tokens/month
+- **No billing required**: Unlike other AI providers
 
 ## Error Handling
 
-If OpenAI API fails, the system returns:
-```
-שגיאה ביצירת הדוח. אנא נסה שוב מאוחר יותר.
-```
-(Translation: "Error generating report. Please try again later.")
+If Gemini API fails, the system automatically falls back to mock reports with identical structure and functionality.
 
 ## Customization
 
 To modify prompts:
-1. Edit the `SYSTEM_PROMPT` constant in `backend/src/openai.ts`
-2. Adjust the user prompt template in the `generateReport` function
-3. Update model parameters as needed
+1. Edit the `SYSTEM_PROMPT` constant in `backend/src/gemini.ts`
+2. Adjust the user prompt template in the `generateReportWithGemini` function
+3. Update model selection as needed
 
 ## Best Practices
 

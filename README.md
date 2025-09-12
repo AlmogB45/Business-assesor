@@ -14,7 +14,7 @@ A comprehensive end-to-end application for assessing business licensing requirem
 
 ### Backend
 - **Node.js + Express** with TypeScript
-- **OpenAI API** for report generation
+- **Google Gemini API** for report generation
 - **JSON file storage** for requirements data
 - **CORS** enabled for frontend communication
 
@@ -60,7 +60,7 @@ business-licensing-assessor/
 
 ### Prerequisites
 - Node.js 16+ and npm
-- OpenAI API key
+- Google Gemini API key (FREE!)
 
 ### 1. Clone Repository
 ```bash
@@ -79,12 +79,18 @@ Create environment file:
 cp env.example .env
 ```
 
-Add your OpenAI API key to `.env`:
+Add your Google Gemini API key to `.env`:
 ```
-OPENAI_API_KEY=your_openai_api_key_here
-MODEL=gpt-4o-mini
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
 PORT=3001
 ```
+
+**Get FREE Gemini API Key:**
+1. Visit https://ai.google.dev/
+2. Click "Get API key in Google AI Studio"
+3. Sign in with Google account
+4. Copy your free API key (no billing required!)
 
 Start backend server:
 ```bash
@@ -151,7 +157,7 @@ Edit `backend/data/requirements.json` to add new licensing requirements. Follow 
 
 ## AI Integration
 
-The system uses OpenAI's API to generate comprehensive licensing reports in Hebrew. The AI assistant:
+The system uses Google Gemini's FREE API to generate comprehensive licensing reports in Hebrew. The AI assistant:
 
 - Analyzes business characteristics
 - Reviews matched requirements
@@ -163,6 +169,12 @@ The system uses OpenAI's API to generate comprehensive licensing reports in Hebr
   - Important notes
   - Information gaps
 
+**Gemini Free Tier Benefits:**
+- 15 requests per minute
+- 1 million tokens per month
+- No billing required
+- High-quality Hebrew language support
+
 See [docs/PROMPTS.md](docs/PROMPTS.md) for AI prompt documentation.
 
 ## Customization
@@ -173,7 +185,7 @@ See [docs/PROMPTS.md](docs/PROMPTS.md) for AI prompt documentation.
 3. Update matching logic in `matcher.ts`
 
 ### Modifying Report Structure
-1. Edit system prompt in `backend/src/openai.ts`
+1. Edit system prompt in `backend/src/gemini.ts`
 2. Adjust user prompt template
 3. Update frontend markdown rendering if needed
 
