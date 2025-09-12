@@ -1,0 +1,20 @@
+# Screenshot Placeholder: Questionnaire Form
+
+This file is a placeholder for a screenshot showing the business questionnaire form.
+
+**Content to capture:**
+- The 5-field questionnaire form
+- Hebrew interface with RTL layout
+- Form validation and user-friendly inputs
+- Submit button and loading states
+
+**Filename**: `questionnaire-form.png`
+**Dimensions**: 1920x1080 (recommended)
+**Description**: Main user interface where business owners input their business characteristics
+
+**To capture this screenshot:**
+1. Start the application locally
+2. Navigate to http://localhost:3000
+3. Take screenshot of the main questionnaire form
+4. Save as questionnaire-form.png in this directory
+5. Delete this placeholder file

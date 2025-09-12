@@ -1,0 +1,23 @@
+# Screenshot Placeholder: System Architecture
+
+This file is a placeholder for a screenshot or diagram showing the system architecture.
+
+**Content to capture:**
+- Overall system architecture diagram
+- Frontend (React) → Backend (Express) → OpenAI API flow
+- Data flow from source documents through ETL to requirements.json
+- Component relationships and technology stack
+
+**Filename**: `system-architecture.png`
+**Dimensions**: 1920x1080 (recommended)
+**Description**: High-level architecture overview showing all system components and data flow
+
+**To create this diagram:**
+1. Use a diagramming tool (draw.io, Lucidchart, or similar)
+2. Include: Frontend, Backend, Data Layer, ETL Process, OpenAI API
+3. Show data flow and API connections
+4. Export as high-resolution PNG
+5. Save as system-architecture.png in this directory
+6. Delete this placeholder file
+
+**Alternative**: Take a screenshot of the ARCHITECTURE.md diagram if rendered visually

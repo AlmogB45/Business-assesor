@@ -41,16 +41,15 @@ Filters and returns requirements that match the given business criteria.
 {
   "matched_requirements": [
     {
-      "id": "license_basic",
-      "name": "רישיון עסק בסיסי",
-      "description": "רישיון עסק כללי הנדרש לכל בית עסק",
-      "type": "mandatory",
+      "id": "license_basic_source",
+      "title": "רישיון עסק בסיסי",
+      "level": "mandatory",
       "applies_if": {
         "area_m2": { "min": 1 }
       },
-      "authority": "עיריית תל אביב",
-      "estimated_time": "2-4 שבועות",
-      "cost": "₪500-1500"
+      "summary": "רישיון עסק כללי הנדרש לכל בית עסק על פי התקנות",
+      "authority": "רשות מקומית",
+      "source_ref": "18-07-2022_4.2A.docx"
     }
   ],
   "business_input": {
@@ -113,6 +112,24 @@ All fields in the request body are required:
   "error": "OpenAI API key not configured"
 }
 ```
+
+## Response Fields
+
+### Requirement Object
+- `id` (string): Unique identifier for the requirement
+- `title` (string): Display name in Hebrew
+- `level` (string): One of "mandatory", "recommended", "optional"
+- `summary` (string): Detailed description in Hebrew
+- `authority` (string): Issuing authority in Hebrew
+- `source_ref` (string): Reference to source document filename
+- `applies_if` (object): Conditions for when requirement applies
+
+### Source References
+All requirements include a `source_ref` field that references the original regulatory document:
+- Points to DOCX or PDF filename in `/source_docs/`
+- Enables traceability to official sources
+- Displayed in frontend for transparency
+- Used for compliance auditing
 
 ## Environment Variables
 

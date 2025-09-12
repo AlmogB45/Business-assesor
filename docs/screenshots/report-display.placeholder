@@ -1,0 +1,22 @@
+# Screenshot Placeholder: Report Display
+
+This file is a placeholder for a screenshot showing the generated licensing report.
+
+**Content to capture:**
+- AI-generated Hebrew report in markdown format
+- Source references section with document names
+- Download PDF and Back to Form buttons
+- Professional report layout with proper RTL formatting
+
+**Filename**: `report-display.png`
+**Dimensions**: 1920x1080 (recommended)
+**Description**: Report view showing comprehensive licensing assessment with source traceability
+
+**To capture this screenshot:**
+1. Start the application locally
+2. Fill out the questionnaire form
+3. Submit to generate a report
+4. Take screenshot of the complete report display
+5. Ensure source references are visible at the bottom
+6. Save as report-display.png in this directory
+7. Delete this placeholder file

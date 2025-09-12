@@ -22,13 +22,12 @@ Requirements are stored in `backend/data/requirements.json`:
 ```typescript
 interface Requirement {
   id: string;                    // Unique identifier
-  name: string;                  // Display name in Hebrew
-  description: string;           // Detailed description in Hebrew
-  type: 'mandatory' | 'recommended' | 'optional';  // Requirement priority
+  title: string;                 // Display name in Hebrew
+  level: 'mandatory' | 'recommended' | 'optional';  // Requirement priority
   applies_if: AppliesIf;        // Conditions for when this requirement applies
+  summary: string;              // Detailed description in Hebrew
   authority: string;            // Issuing authority in Hebrew
-  estimated_time: string;       // Time estimation in Hebrew
-  cost: string;                 // Cost estimation in Hebrew
+  source_ref: string;           // Reference to source document (DOCX/PDF filename)
 }
 
 interface AppliesIf {
@@ -41,11 +40,23 @@ interface AppliesIf {
 }
 ```
 
-## Requirement Types
+## Requirement Levels
 
 - **mandatory**: Must be obtained for legal operation
 - **recommended**: Strongly advised for smooth operation
 - **optional**: May be beneficial depending on business model
+
+## Source References
+
+Each requirement includes a `source_ref` field that points to the original source document:
+- References the filename of the DOCX or PDF document
+- Enables traceability back to official regulatory documents
+- Supports compliance auditing and verification
+- Displayed in frontend reports for transparency
+
+Example source references:
+- `"18-07-2022_4.2A.docx"` - Word document with licensing requirements
+- `"18-07-2022_4.2A.pdf"` - PDF version of the same document
 
 ## Matching Logic
 
