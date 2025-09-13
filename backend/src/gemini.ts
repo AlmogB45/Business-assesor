@@ -5,12 +5,15 @@ const SYSTEM_PROMPT = `אתה מסייע רישוי עסקים בישראל. ק�
 
 הדוח צריך להיות מקצועי, ברור ופרקטי. השתמש בכותרות ברורות, רשימות מסודרות, וטבלאות כשמתאים. התמקד במידע מעשי שיעזור לבעל העסק להבין מה עליו לעשות.
 
+חשוב: אל תכלול שדות של שם העסק או כתובת העסק בדוח. התמקד רק בנתונים הטכניים שסופקו.
+
 מבנה הדוח:
 - כל סעיף צריך להיות מאורגן עם כותרות משנה ברורות
 - השתמש ברשימות ממוספרות ומובחנות
 - הוסף טבלאות כשמתאים לארגון המידע
 - בסוף כל סעיף, הוסף שורה אחת עם "מקור: [רשות מוציאה]" בלבד
-- אל תכלול מידע על מקורות בתוך הטקסט עצמו`;
+- אל תכלול מידע על מקורות בתוך הטקסט עצמו
+- אל תכלול שדות של שם העסק או כתובת העסק`;
 
 const MOCK_MODE_ENABLED = process.env.MOCK_GEMINI === 'true';
 
@@ -27,7 +30,7 @@ function generateMockReport(
 
 ## תקציר מנהלים
 
-על פי הנתונים שסופקו:
+על פי הנתונים הטכניים שסופקו:
 - שטח העסק: ${businessInput.area_m2} מ"ר
 - מספר מקומות ישיבה: ${businessInput.seats}
 - שימוש בגז: ${businessInput.gas ? 'כן' : 'לא'}
@@ -36,13 +39,29 @@ function generateMockReport(
 
 נמצאו **${matchedRequirements.length} דרישות רלוונטיות** לעסק שלכם.
 
-## דרישות חובה (${mandatoryReqs.length})
+## 🚨 דרישות חובה - דרישות קריטיות לפתיחת העסק (${mandatoryReqs.length})
+**חשוב: דרישות אלו חובה לביצוע לפני פתיחת העסק!**
 
-${mandatoryReqs.map(req => `### ${req.title}
-- **רשות מוציאה:** ${req.authority}
-- **תיאור:** ${req.summary}
-- **מקור:** ${req.source_ref}
+### 📋 רשימת דרישות חובה:
+
+${mandatoryReqs.map((req, index) => `- **דרישה ${index + 1}:** ${req.title}
+  - **תיאור:** ${req.summary}
+  - **רשות מוציאה:** ${req.authority}
+  - **זמן משוער:** 2-4 שבועות
+  - **צעדים לביצוע:**
+    1. פנה לרשות המוציאה לקבלת רשימת מסמכים נדרשים
+    2. אסוף את כל המסמכים הנדרשים
+    3. הגש את הבקשה לרשות המוציאה
+    4. עקוב אחר סטטוס הבקשה
+
 `).join('\n')}
+
+### ⚠️ הערות חשובות לדרישות חובה:
+- כל הדרישות חייבות להיות מושלמות לפני פתיחת העסק
+- מומלץ להתחיל בתהליך הרישוי לפחות 6-8 שבועות לפני הפתיחה המתוכננת
+- יש לוודא שכל המסמכים הנדרשים מוכנים מראש
+
+**מקור:** ${mandatoryReqs.map(req => req.authority).filter((value, index, self) => self.indexOf(value) === index).join(', ')}
 
 ## דרישות מומלצות (${recommendedReqs.length})
 
@@ -136,12 +155,15 @@ function addSourceReferencesToReport(report: string, matchedRequirements: Requir
 export async function generateReportWithGemini(
   businessInput: BusinessInput,
   matchedRequirements: Requirement[]
-): Promise<string> {
+): Promise<{ report: string; is_mock: boolean }> {
   // Use mock response if Gemini is not available or in mock mode
   if (MOCK_MODE_ENABLED || !process.env.GEMINI_API_KEY) {
     console.log('Using mock response (Gemini API key not available)');
     const mockReport = generateMockReport(businessInput, matchedRequirements);
-    return addSourceReferencesToReport(mockReport, matchedRequirements);
+    return {
+      report: addSourceReferencesToReport(mockReport, matchedRequirements),
+      is_mock: true
+    };
   }
 
   try {
@@ -150,12 +172,14 @@ export async function generateReportWithGemini(
     const userPrompt = `
 ${SYSTEM_PROMPT}
 
-נתוני העסק:
+נתוני העסק (רק הנתונים הטכניים הבאים):
 - שטח: ${businessInput.area_m2} מ"ר
 - מקומות ישיבה: ${businessInput.seats}
 - גז: ${businessInput.gas ? 'כן' : 'לא'}
 - הגשת בשר: ${businessInput.serves_meat ? 'כן' : 'לא'}
 - משלוחים: ${businessInput.deliveries ? 'כן' : 'לא'}
+
+הערה: אל תכלול שדות של שם העסק או כתובת העסק בדוח. התמקד רק בנתונים הטכניים שסופקו.
 
 דרישות רגולטוריות רלוונטיות:
 ${matchedRequirements.map(req => `
@@ -172,11 +196,33 @@ ${matchedRequirements.map(req => `
 - המלצות עיקריות לפעולה
 - הערכת זמן משוערת לתהליך
 
-## 2. דרישות חובה
-- רשימת דרישות חובה מאורגנת לפי סדר עדיפות
-- הסבר מפורט לכל דרישה
-- צעדים מעשיים לביצוע
-- בסוף הסעיף: מקור: [רשות מוציאה]
+## 2. 🚨 דרישות חובה - דרישות קריטיות לפתיחת העסק
+**חשוב: דרישות אלו חובה לביצוע לפני פתיחת העסק!**
+
+### 📋 רשימת דרישות חובה:
+- **דרישה 1:** [שם הדרישה]
+  - **תיאור:** [הסבר מפורט]
+  - **רשות מוציאה:** [שם הרשות]
+  - **זמן משוער:** [2-4 שבועות]
+  - **צעדים לביצוע:**
+    1. [צעד ראשון]
+    2. [צעד שני]
+    3. [צעד שלישי]
+
+- **דרישה 2:** [שם הדרישה]
+  - **תיאור:** [הסבר מפורט]
+  - **רשות מוציאה:** [שם הרשות]
+  - **זמן משוער:** [2-4 שבועות]
+  - **צעדים לביצוע:**
+    1. [צעד ראשון]
+    2. [צעד שני]
+
+### ⚠️ הערות חשובות לדרישות חובה:
+- כל הדרישות חייבות להיות מושלמות לפני פתיחת העסק
+- מומלץ להתחיל בתהליך הרישוי לפחות 6-8 שבועות לפני הפתיחה המתוכננת
+- יש לוודא שכל המסמכים הנדרשים מוכנים מראש
+
+**מקור:** [רשות מוציאה]
 
 ## 3. דרישות מומלצות
 - רשימת דרישות מומלצות מאורגנת
@@ -213,11 +259,18 @@ ${matchedRequirements.map(req => `
         
         if (!text || text.trim().length === 0) {
           console.log('Empty response from Gemini, falling back to mock');
-          return generateMockReport(businessInput, matchedRequirements);
+          const mockReport = generateMockReport(businessInput, matchedRequirements);
+          return {
+            report: addSourceReferencesToReport(mockReport, matchedRequirements),
+            is_mock: true
+          };
         }
         
         console.log(`✅ Gemini API successful on attempt ${attempt}`);
-        return addSourceReferencesToReport(text, matchedRequirements);
+        return {
+          report: addSourceReferencesToReport(text, matchedRequirements),
+          is_mock: false
+        };
       } catch (error: any) {
         lastError = error;
         console.log(`❌ Gemini API attempt ${attempt}/3 failed:`, error.message);
@@ -250,25 +303,40 @@ ${matchedRequirements.map(req => `
     if (error.message?.includes('API_KEY_INVALID')) {
       console.log('Invalid Gemini API key, falling back to mock response');
       const mockReport = generateMockReport(businessInput, matchedRequirements);
-      return addSourceReferencesToReport(mockReport, matchedRequirements);
+      return {
+        report: addSourceReferencesToReport(mockReport, matchedRequirements),
+        is_mock: true
+      };
     } else if (error.message?.includes('QUOTA_EXCEEDED')) {
       console.log('Gemini quota exceeded, falling back to mock response');
       const mockReport = generateMockReport(businessInput, matchedRequirements);
-      return addSourceReferencesToReport(mockReport, matchedRequirements);
+      return {
+        report: addSourceReferencesToReport(mockReport, matchedRequirements),
+        is_mock: true
+      };
     } else if (error.message?.includes('RATE_LIMIT_EXCEEDED')) {
       console.log('Gemini rate limit exceeded, falling back to mock response');
       const mockReport = generateMockReport(businessInput, matchedRequirements);
-      return addSourceReferencesToReport(mockReport, matchedRequirements);
+      return {
+        report: addSourceReferencesToReport(mockReport, matchedRequirements),
+        is_mock: true
+      };
     } else if (error.message?.includes('404 Not Found') || error.message?.includes('models/') && error.message?.includes('is not found')) {
       console.log('Gemini model not found (404), falling back to mock response');
       console.log('Available models: gemini-1.5-flash, gemini-1.5-pro, gemini-1.0-pro');
       const mockReport = generateMockReport(businessInput, matchedRequirements);
-      return addSourceReferencesToReport(mockReport, matchedRequirements);
+      return {
+        report: addSourceReferencesToReport(mockReport, matchedRequirements),
+        is_mock: true
+      };
     } else {
       // For any other error, fall back to mock
       console.log('Gemini API error, falling back to mock response');
       const mockReport = generateMockReport(businessInput, matchedRequirements);
-      return addSourceReferencesToReport(mockReport, matchedRequirements);
+      return {
+        report: addSourceReferencesToReport(mockReport, matchedRequirements),
+        is_mock: true
+      };
     }
   }
 }

@@ -32,6 +32,7 @@ export interface ReportResponse {
   report: string;
   matched_requirements: Requirement[];
   business_input: BusinessInput;
+  is_mock?: boolean;
 }
 
 

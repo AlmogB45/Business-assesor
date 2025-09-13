@@ -51,6 +51,38 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
     }
   };
 
+  const downloadJSON = () => {
+    try {
+      const jsonData = {
+        business_input: reportData.business_input,
+        matched_requirements: reportData.matched_requirements,
+        report: reportData.report,
+        generated_at: new Date().toISOString(),
+        metadata: {
+          total_requirements: reportData.matched_requirements?.length || 0,
+          mandatory_count: reportData.matched_requirements?.filter(req => req.level === 'mandatory').length || 0,
+          recommended_count: reportData.matched_requirements?.filter(req => req.level === 'recommended').length || 0,
+          optional_count: reportData.matched_requirements?.filter(req => req.level === 'optional').length || 0
+        }
+      };
+
+      const dataStr = JSON.stringify(jsonData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'דוח-רישוי-עסק.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating JSON:', error);
+      alert('שגיאה ביצירת קובץ JSON');
+    }
+  };
+
   const toggleStepCompleted = (stepId: string) => {
     const newCompleted = new Set(completedSteps);
     if (newCompleted.has(stepId)) {
@@ -78,14 +110,6 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
     }
   };
 
-  const getPriorityColor = (level: string) => {
-    switch (level) {
-      case 'mandatory': return '#e74c3c';
-      case 'recommended': return '#f39c12';
-      case 'optional': return '#95a5a6';
-      default: return '#95a5a6';
-    }
-  };
 
   const getPriorityIcon = (level: string) => {
     switch (level) {
@@ -158,6 +182,9 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
         <div className="report-actions">
           <button className="btn-primary" onClick={downloadPDF}>
             📄 הורד PDF
+          </button>
+          <button className="btn-primary" onClick={downloadJSON}>
+            📊 הורד JSON
           </button>
           <button className="btn-secondary" onClick={onBack}>
             ← חזור לשאלון
@@ -257,10 +284,17 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
             <div className="ai-report-section">
               <div className="ai-report-header">
                 <h2>🤖 דוח AI מפורט</h2>
-                <div className="ai-report-badge">
-                  <span className="badge-icon">✨</span>
-                  <span className="badge-text">נוצר על ידי AI</span>
-                </div>
+                {reportData.is_mock ? (
+                  <div className="mock-report-badge">
+                    <span className="badge-icon">⚠️</span>
+                    <span className="badge-text">דוח דמו ללא AI</span>
+                  </div>
+                ) : (
+                  <div className="ai-report-badge">
+                    <span className="badge-icon">✨</span>
+                    <span className="badge-text">נוצר על ידי AI</span>
+                  </div>
+                )}
               </div>
               
               <div className="ai-report-content">
@@ -292,7 +326,9 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ reportData, onBack }) => 
                     </div>
                     <div className="info-item">
                       <span className="info-icon">⚡</span>
-                      <span className="info-text">נוצר בזמן אמת</span>
+                      <span className="info-text">
+                        {reportData.is_mock ? 'דוח דמו ללא AI' : 'נוצר בזמן אמת'}
+                      </span>
                     </div>
                   </div>
                 </div>

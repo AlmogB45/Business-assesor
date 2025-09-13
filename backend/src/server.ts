@@ -100,12 +100,13 @@ app.post('/api/report', validateBusinessInput, async (req, res) => {
     console.log('Generating report for business input:', businessInput);
     console.log(`Found ${matchedRequirements.length} matching requirements`);
     
-    const report = await generateReportWithGemini(businessInput, matchedRequirements);
+    const reportResult = await generateReportWithGemini(businessInput, matchedRequirements);
     
     const response: ReportResponse = {
-      report,
+      report: reportResult.report,
       matched_requirements: matchedRequirements,
-      business_input: businessInput
+      business_input: businessInput,
+      is_mock: reportResult.is_mock
     };
     
     res.json(response);

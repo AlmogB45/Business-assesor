@@ -783,6 +783,15 @@ h1 {
   gap: 8px;
 }
 
+.mock-report-badge {
+  background: #f39c12;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .badge-icon {
   font-size: 1.2em;
 }
@@ -901,11 +910,27 @@ h1 {
   color: #34495e;
   font-size: 1.4em;
   font-weight: 600;
-  margin: 18px 0 12px 0;
-  padding: 8px 0;
-  border-right: 3px solid #3498db;
-  padding-right: 12px;
-  background: linear-gradient(90deg, #f8f9fa 0%, transparent 100%);
+  margin: 20px 0 15px 0;
+  padding: 15px 20px;
+  border-right: 4px solid #3498db;
+  background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 0 10px 10px 0;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.report-content-wrapper h2:hover {
+  background: linear-gradient(90deg, #e8f4f8 0%, #f0f8ff 100%);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+  transform: translateX(-2px);
+}
+
+.report-content-wrapper h2::before {
+  content: "📋";
+  margin-left: 10px;
+  font-size: 1.1em;
+  opacity: 0.8;
 }
 
 .report-content-wrapper h3 {
@@ -1226,6 +1251,11 @@ h1 {
   margin-bottom: 40px;
 }
 
+.requirements-group:first-of-type {
+  margin-top: 20px;
+}
+
+
 .group-title {
   font-size: 1.4em;
   font-weight: 700;
@@ -1260,6 +1290,7 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
 }
+
 
 /* Requirement Cards */
 .requirement-card {
